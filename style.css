@@ -1,0 +1,363 @@
+/* ===== 基本 ===== */
+body {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  background: #050505;
+  color: #e0d8b0;
+  overflow-x: hidden;
+}
+
+/* ===== 戦場ノイズ ===== */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 999;
+}
+
+/* ===== ファーストビュー ===== */
+.hero {
+  height: 100vh;
+  background: radial-gradient(circle at center, #3a2a10 0%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+/* 暗い霧 */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 20%,
+    rgba(0,0,0,0.7) 100%
+  );
+}
+
+/* ===== タイトル ===== */
+h1 {
+  font-size: 4rem;
+  letter-spacing: 0.3em;
+  color: #f0c060;
+  text-shadow:
+    0 0 10px rgba(255,200,100,0.3),
+    0 0 40px rgba(255,150,0,0.2);
+  animation: flicker 3s infinite;
+}
+
+/* 点滅 */
+@keyframes flicker {
+  0%,100% {opacity: 1;}
+  92% {opacity: 1;}
+  93% {opacity: 0.7;}
+  95% {opacity: 1;}
+}
+
+/* サブタイトル */
+.subtitle {
+  margin-top: 10px;
+  color: #aaa;
+  letter-spacing: 0.2em;
+}
+
+/* ===== ボタン ===== */
+.btn {
+  margin-top: 30px;
+  padding: 14px 40px;
+  border: 2px solid #aa8800;
+  background: transparent;
+  color: #aa8800;
+  cursor: pointer;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #aa8800;
+  color: black;
+  transform: translateY(-3px);
+}
+
+/* ===== セクション ===== */
+.section {
+  padding: 100px 20px;
+  text-align: center;
+}
+
+/* ===== カード ===== */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  width: 240px;
+  padding: 20px;
+  background: linear-gradient(180deg, #111, #080808);
+  border: 1px solid #333;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 汚れ効果 */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(100,60,20,0.3),
+    transparent 70%
+  );
+}
+
+/* ホバー */
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: #aa8800;
+}
+
+/* ===== フェードイン ===== */
+.fade {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: 1s ease;
+}
+
+.fade.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== 血のようなライン ===== */
+.section::before {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 0 auto 30px;
+  background: linear-gradient(90deg, transparent, #aa0000, transparent);
+}
+
+/* ===== 画面の端の暗さ ===== */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0,0,0,0.6) 100%
+  );
+  z-index: 998;
+}
+
+/* ===== 軽い揺れ ===== */
+@keyframes shake {
+  0% {transform: translate(0,0);}
+  25% {transform: translate(-1px,1px);}
+  75% {transform: translate(1px,-1px);}
+  100% {transform: translate(0,0);}
+}
+
+.shake {
+  animation: shake 0.2s infinite;
+}/* ===== 基本 ===== */
+body {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  background: #050505;
+  color: #e0d8b0;
+  overflow-x: hidden;
+}
+
+/* ===== 戦場ノイズ ===== */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 999;
+}
+
+/* ===== ファーストビュー ===== */
+.hero {
+  height: 100vh;
+  background: radial-gradient(circle at center, #3a2a10 0%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+/* 暗い霧 */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 20%,
+    rgba(0,0,0,0.7) 100%
+  );
+}
+
+/* ===== タイトル ===== */
+h1 {
+  font-size: 4rem;
+  letter-spacing: 0.3em;
+  color: #f0c060;
+  text-shadow:
+    0 0 10px rgba(255,200,100,0.3),
+    0 0 40px rgba(255,150,0,0.2);
+  animation: flicker 3s infinite;
+}
+
+/* 点滅 */
+@keyframes flicker {
+  0%,100% {opacity: 1;}
+  92% {opacity: 1;}
+  93% {opacity: 0.7;}
+  95% {opacity: 1;}
+}
+
+/* サブタイトル */
+.subtitle {
+  margin-top: 10px;
+  color: #aaa;
+  letter-spacing: 0.2em;
+}
+
+/* ===== ボタン ===== */
+.btn {
+  margin-top: 30px;
+  padding: 14px 40px;
+  border: 2px solid #aa8800;
+  background: transparent;
+  color: #aa8800;
+  cursor: pointer;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #aa8800;
+  color: black;
+  transform: translateY(-3px);
+}
+
+/* ===== セクション ===== */
+.section {
+  padding: 100px 20px;
+  text-align: center;
+}
+
+/* ===== カード ===== */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  width: 240px;
+  padding: 20px;
+  background: linear-gradient(180deg, #111, #080808);
+  border: 1px solid #333;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 汚れ効果 */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(100,60,20,0.3),
+    transparent 70%
+  );
+}
+
+/* ホバー */
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: #aa8800;
+}
+
+/* ===== フェードイン ===== */
+.fade {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: 1s ease;
+}
+
+.fade.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== 血のようなライン ===== */
+.section::before {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 0 auto 30px;
+  background: linear-gradient(90deg, transparent, #aa0000, transparent);
+}
+
+/* ===== 画面の端の暗さ ===== */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0,0,0,0.6) 100%
+  );
+  z-index: 998;
+}
+
+/* ===== 軽い揺れ ===== */
+@keyframes shake {
+  0% {transform: translate(0,0);}
+  25% {transform: translate(-1px,1px);}
+  75% {transform: translate(1px,-1px);}
+  100% {transform: translate(0,0);}
+}
+
+.shake {
+  animation: shake 0.2s infinite;
+}

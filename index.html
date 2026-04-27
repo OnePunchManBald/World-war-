@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>戦場を、生きろ。</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  background: #0a0a0a;
+  color: #e0d8b0;
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+/* ===== 背景 ===== */
+.hero {
+  height: 100vh;
+  background: radial-gradient(circle at center, #3a2a10 0%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* ノイズ */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* ===== タイトル ===== */
+h1 {
+  font-size: 4rem;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 20px rgba(255,180,0,0.4);
+}
+
+.subtitle {
+  margin-top: 10px;
+  color: #aaa;
+}
+
+/* ===== ボタン ===== */
+.btn {
+  margin-top: 30px;
+  padding: 15px 40px;
+  border: 2px solid #aa8800;
+  background: transparent;
+  color: #aa8800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #aa8800;
+  color: black;
+}
+
+/* ===== セクション ===== */
+.section {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  width: 220px;
+  padding: 20px;
+  background: #111;
+  border: 1px solid #333;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #aa8800;
+}
+
+/* ===== フェードイン ===== */
+.fade {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: 1s;
+}
+.fade.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== ファーストビュー ===== -->
+<div class="hero">
+  <h1>戦場を、生きろ。</h1>
+  <div class="subtitle">1917 — 命を懸けた戦場</div>
+
+  <!-- ★ここが重要 -->
+  <button class="btn" onclick="startGame()">戦場に入る</button>
+</div>
+
+<!-- ===== 世界観 ===== -->
+<div class="section fade">
+  <h2>戦場の記憶</h2>
+  <p>
+    西部戦線、太平洋戦争、東部戦線…<br>
+    歴史は語る、生き残ることの意味を。
+  </p>
+</div>
+
+<!-- ===== 作品群 ===== -->
+<div class="section fade">
+  <h2>影響を受けた戦場</h2>
+  <div class="cards">
+    <div class="card">1917</div>
+    <div class="card">Fury</div>
+    <div class="card">Saving Private Ryan</div>
+    <div class="card">Black Hawk Down</div>
+    <div class="card">Apocalypse Now</div>
+    <div class="card">Rogue One</div>
+  </div>
+</div>
+
+<!-- ===== ゲーム誘導 ===== -->
+<div class="section fade" id="game">
+  <h2>塹壕戦 1917</h2>
+  <p>
+    砲撃、ガス、突撃。<br>
+    命は軽く、恐怖は重い。
+  </p>
+
+  <!-- ★ここもゲームに飛ばす -->
+  <button class="btn" onclick="startGame()">プレイする</button>
+</div>
+
+<script>
+
+// ===== ゲームへ遷移 =====
+function startGame() {
+  document.body.style.opacity = "0";
+
+  setTimeout(() => {
+    window.location.href = "塹壕戦争.html";
+  }, 500);
+}
+
+// ===== フェードイン =====
+const fades = document.querySelectorAll(".fade");
+
+window.addEventListener("scroll", () => {
+  fades.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 100){
+      el.classList.add("show");
+    }
+  });
+});
+
+// ===== 画面揺れ（軽い演出） =====
+setInterval(()=>{
+  document.body.style.transform = `translateX(${Math.random()*2-1}px)`;
+},200);
+
+</script>
+
+</body>
+</html>
