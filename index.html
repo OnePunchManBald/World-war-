@@ -30,6 +30,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: repeating-linear-gradient(
     0deg,
     rgba(255,255,255,0.02),
@@ -158,7 +159,7 @@ function startGame() {
   document.body.style.opacity = "0";
 
   setTimeout(() => {
-    window.location.href = "塹壕戦争.html";
+    window.location.href = "game.html";
   }, 500);
 }
 
