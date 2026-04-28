@@ -1021,6 +1021,12 @@ function startAmbient() {
 // ===================================================
 // GAME STATE
 // ===================================================
+// ガスマスク: チャージ制
+// - 最大チャージ数まで自動回復
+// - 0のときは「⏳残り秒」を表示
+const GAS_MASK_MAX_CHARGES = 1;
+const GAS_MASK_RECHARGE_MS = 30000;
+
 const RANKS = ['二等兵','一等兵','上等兵','兵長','3等軍曹','二等軍曹','一等軍曹','曹長','准尉','少尉','中尉','大尉','少佐','中佐','大佐','准将','少将','中将','大将'];
 const SKILLS = [
   {name:'速装填', desc:'装填速度+30%', effect:'reload'},
@@ -1058,7 +1064,8 @@ const WAVES = [
 ];
  
 const G = {
-  hp:100, maxHp:100, ammo:5, maxAmmo:5, heals:2, grenades:3, gasMasks:1,
+  hp:100, maxHp:100, ammo:5, maxAmmo:5, heals:2, grenades:3,
+  gasMaskCharges: GAS_MASK_MAX_CHARGES,
   kills:0, score:0, shots:0, hits:0,
   wave:1, maxWave:8, enemies:[], nextId:0,
   tankUsed:false, tankActive:false,
@@ -1073,6 +1080,8 @@ const G = {
   snipeTimer:null, mgTimer:null,
   reloadMult:1.0, // スキルで変化
   gasMaskActive:false, gasMaskTimer:null,
+  gasMaskRechargeEndAt: 0,
+  gasMaskRechargeTimer: null,
 };
  
 const COVER_POSITIONS = [
@@ -1118,13 +1127,16 @@ function onKey(e) {
 function restartGame() {
   document.getElementById('endScreen').style.display = 'none';
   Object.assign(G, {
-    hp:100,maxHp:100,ammo:5,maxAmmo:5,heals:2,grenades:3,gasMasks:1,
+    hp:100,maxHp:100,ammo:5,maxAmmo:5,heals:2,grenades:3,
+    gasMaskCharges: GAS_MASK_MAX_CHARGES,
     kills:0,score:0,shots:0,hits:0,wave:1,enemies:[],nextId:0,
     tankUsed:false,tankActive:false,isReloading:false,
     gameActive:true,waveActive:false,rankIdx:0,xp:0,xpToNext:200,
     unlockedSkills:[],usedHeals:0,position:1,inCover:false,coverDmgMult:1.0,
     sniperActive:false,mgActive:false,reloadMult:1.0,
     gasMaskActive:false,gasMaskTimer:null,
+    gasMaskRechargeEndAt: 0,
+    gasMaskRechargeTimer: null,
   });
   document.getElementById('enemyLayer').innerHTML='';
   document.getElementById('tank').style.cssText='display:none;left:-220px;';
@@ -1134,6 +1146,9 @@ function restartGame() {
   document.getElementById('gasMaskStatus').style.display='none';
   document.getElementById('gasMaskBtn').classList.remove('gas-alert');
   clearTimeout(G.gasMaskTimer);
+  if (G.gasMaskRechargeTimer) clearInterval(G.gasMaskRechargeTimer);
+  G.gasMaskRechargeTimer = null;
+  G.gasMaskRechargeEndAt = 0;
   document.getElementById('skill0').className='skill-slot';document.getElementById('skill0').textContent='── ロック中 ──';
   document.getElementById('skill1').className='skill-slot';document.getElementById('skill1').textContent='── ロック中 ──';
   document.getElementById('skill2').className='skill-slot';document.getElementById('skill2').textContent='── ロック中 ──';
@@ -1589,8 +1604,9 @@ function gasAttack() {
  
 function doGasMask() {
   if(G.gasMaskActive){ addLog('既にマスクを装着している',''); return; }
-  if(G.gasMasks<=0){ addLog('防毒マスクがない！','warn'); return; }
-  G.gasMasks--;
+  if(G.gasMaskCharges<=0){ addLog('😷 防毒マスクはチャージ中だ！','warn'); return; }
+  G.gasMaskCharges--;
+  startGasMaskRechargeIfNeeded();
   G.gasMaskActive=true;
   sfxHeal();
   addLog('😷 防毒マスク装着！ガスダメージ 90%軽減！','good');
@@ -1616,6 +1632,26 @@ function doGasMask() {
     addLog('防毒マスクの効果が切れた','warn');
   }, MASK_DURATION);
   updateHUD();
+}
+
+function startGasMaskRechargeIfNeeded() {
+  if (G.gasMaskCharges >= GAS_MASK_MAX_CHARGES) return;
+  if (G.gasMaskRechargeTimer) return;
+
+  G.gasMaskRechargeEndAt = Date.now() + GAS_MASK_RECHARGE_MS;
+  G.gasMaskRechargeTimer = setInterval(() => {
+    if (!G.gameActive) return;
+    const remaining = G.gasMaskRechargeEndAt - Date.now();
+    if (remaining <= 0) {
+      clearInterval(G.gasMaskRechargeTimer);
+      G.gasMaskRechargeTimer = null;
+      G.gasMaskRechargeEndAt = 0;
+      G.gasMaskCharges = Math.min(G.gasMaskCharges + 1, GAS_MASK_MAX_CHARGES);
+      // もし最大チャージが複数なら、足りない分を連続で回復
+      if (G.gasMaskCharges < GAS_MASK_MAX_CHARGES) startGasMaskRechargeIfNeeded();
+    }
+    updateHUD();
+  }, 500);
 }
  
 function enemyTankAttack() {
@@ -1778,7 +1814,15 @@ function updateHUD() {
   document.getElementById('ammoDisplay').textContent=`${G.ammo} / ${G.maxAmmo}${G.isReloading?' 🔄':''}`;
   document.getElementById('healCount').textContent=`×${G.heals}`;
   document.getElementById('grenadeCount').textContent=`×${G.grenades}`;
-  document.getElementById('maskCount').textContent=`×${G.gasMasks}${G.gasMaskActive?' [M]':''}`;
+  const maskBtn = document.getElementById('gasMaskBtn');
+  const maskCountEl = document.getElementById('maskCount');
+  if (G.gasMaskCharges > 0) {
+    maskCountEl.textContent = `×${G.gasMaskCharges}${G.gasMaskActive?' [M]':''}`;
+  } else {
+    const sec = G.gasMaskRechargeEndAt ? Math.max(0, Math.ceil((G.gasMaskRechargeEndAt - Date.now())/1000)) : 0;
+    maskCountEl.textContent = `⏳${sec}s`;
+  }
+  maskBtn.disabled = G.gasMaskActive || G.gasMaskCharges <= 0;
   document.getElementById('rankDisplay').textContent=RANKS[G.rankIdx];
   document.getElementById('xpBar').style.width=(G.xp/G.xpToNext*100)+'%';
   document.getElementById('killStat').textContent=G.kills;
