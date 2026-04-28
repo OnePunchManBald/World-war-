@@ -47,6 +47,29 @@ h1 {
   text-shadow: 0 0 20px rgba(255,180,0,0.4);
 }
 
+/* ===== ロゴ ===== */
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.logo svg {
+  width: 84px;
+  height: 84px;
+}
+.logo-mark {
+  fill: transparent;
+  stroke: #aa8800;
+  stroke-width: 2;
+}
+.logo-text {
+  fill: #aa8800;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.18em;
+}
+
 .subtitle {
   margin-top: 10px;
   color: #aaa;
@@ -111,6 +134,13 @@ h1 {
 
 <!-- ===== ファーストビュー ===== -->
 <div class="hero">
+  <div class="logo" role="img" aria-label="VERDUN FRONT ロゴ">
+    <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <path class="logo-mark" d="M50 6 L80 20 L80 52 C80 71 67 86 50 94 C33 86 20 71 20 52 L20 20 Z" />
+      <text class="logo-text" x="50" y="52" text-anchor="middle" font-size="14">1917</text>
+      <text class="logo-text" x="50" y="70" text-anchor="middle" font-size="10">VERDUN</text>
+    </svg>
+  </div>
   <h1>戦場を、生きろ。</h1>
   <div class="subtitle">1917 — 命を懸けた戦場</div>
 
@@ -148,8 +178,7 @@ h1 {
     命は軽く、恐怖は重い。
   </p>
 
-  <!-- ★ここもゲームに飛ばす -->
-  <button class="btn" onclick="startGame()">プレイする</button>
+  <p class="subtitle">上の「戦場に入る」から開始できます。</p>
 </div>
 
 <script>
