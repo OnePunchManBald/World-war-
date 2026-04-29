@@ -9,21 +9,18 @@
         "cwd": "${workspaceFolder}"
       },
       "isBackground": true,
-      "problemMatcher": [
-        {
-          "owner": "custom",
-          "pattern": [
-            {
-              "regexp": ".*"
-            }
-          ],
-          "background": {
-            "activeOnStart": true,
-            "beginsPattern": "Serving HTTP on",
-            "endsPattern": "Serving HTTP on"
-          }
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$",
+          "message": 1
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Serving HTTP on",
+          "endsPattern": "Serving HTTP on"
         }
-      ],
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
